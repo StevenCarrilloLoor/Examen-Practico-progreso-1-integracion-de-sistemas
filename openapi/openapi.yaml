@@ -1,0 +1,232 @@
+openapi: 3.0.3
+info:
+  title: SaludVital - API de Pre-Registros de Pacientes
+  description: |
+    API REST propuesta como evolución futura del proceso File Transfer entre
+    el **Sistema de Admisiones** y el **Sistema de Facturación** de la
+    Clínica SaludVital.
+
+    Esta API reemplaza la generación manual del CSV diario y permite a
+    Facturación obtener los pre-registros en tiempo real, con autenticación,
+    trazabilidad y respuestas estructuradas.
+  version: "1.0.0"
+  contact:
+    name: Steven Carrillo Loor
+    email: stevencarrilloloor@gmail.com
+servers:
+  - url: https://api.saludvital.ec/v1
+    description: Producción
+  - url: https://api-stg.saludvital.ec/v1
+    description: Staging
+
+tags:
+  - name: pre-registros
+    description: Operaciones sobre pre-registros de pacientes.
+
+security:
+  - bearerAuth: []
+
+paths:
+
+  /pre-registros:
+    get:
+      tags: [pre-registros]
+      summary: Listar pre-registros
+      description: |
+        Devuelve los pre-registros de pacientes creados el día indicado.
+        Si no se envía el parámetro `fecha`, se usa la fecha del servidor.
+      operationId: listarPreRegistros
+      parameters:
+        - in: query
+          name: fecha
+          schema:
+            type: string
+            format: date
+            example: "2026-05-10"
+          required: false
+          description: Filtra los pre-registros por `appointment_date`.
+        - in: query
+          name: insurance_code
+          schema:
+            type: string
+            enum: [IESS, PRIVADO, NINGUNO]
+          required: false
+        - in: query
+          name: page
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - in: query
+          name: size
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 200
+            default: 50
+      responses:
+        "200":
+          description: Lista paginada de pre-registros.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PreRegistroPage"
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "500": { $ref: "#/components/responses/ServerError" }
+
+    post:
+      tags: [pre-registros]
+      summary: Crear un pre-registro
+      description: |
+        Crea un pre-registro individual en el Sistema de Admisiones.
+        Este endpoint reemplaza la fila en el CSV generado diariamente.
+      operationId: crearPreRegistro
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PreRegistroInput"
+      responses:
+        "201":
+          description: Pre-registro creado correctamente.
+          headers:
+            Location:
+              schema: { type: string, format: uri }
+              description: URI del recurso creado.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PreRegistro"
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "409":
+          description: Ya existe un pre-registro con ese `patient_id` y fecha.
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+        "500": { $ref: "#/components/responses/ServerError" }
+
+  /pre-registros/{patient_id}:
+    get:
+      tags: [pre-registros]
+      summary: Obtener un pre-registro por patient_id
+      operationId: obtenerPreRegistro
+      parameters:
+        - in: path
+          name: patient_id
+          required: true
+          schema: { type: string, example: "1001" }
+      responses:
+        "200":
+          description: Pre-registro encontrado.
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/PreRegistro" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+
+components:
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+
+    PreRegistroInput:
+      type: object
+      required:
+        - patient_id
+        - full_name
+        - appointment_date
+        - insurance_code
+      properties:
+        patient_id:
+          type: string
+          example: "1001"
+        full_name:
+          type: string
+          example: "Ana Perez"
+        appointment_date:
+          type: string
+          format: date
+          example: "2026-05-10"
+        insurance_code:
+          type: string
+          enum: [IESS, PRIVADO, NINGUNO]
+
+    PreRegistro:
+      allOf:
+        - $ref: "#/components/schemas/PreRegistroInput"
+        - type: object
+          required: [id, created_at, status]
+          properties:
+            id:
+              type: string
+              format: uuid
+              example: "f3d9a2b4-9d21-4f4e-8a3d-d6e7e1b2f9b1"
+            created_at:
+              type: string
+              format: date-time
+              example: "2026-04-22T10:30:15Z"
+            status:
+              type: string
+              enum: [PENDIENTE, PROCESADO, RECHAZADO]
+              example: "PENDIENTE"
+
+    PreRegistroPage:
+      type: object
+      required: [data, page, size, total]
+      properties:
+        data:
+          type: array
+          items: { $ref: "#/components/schemas/PreRegistro" }
+        page:    { type: integer, example: 1 }
+        size:    { type: integer, example: 50 }
+        total:   { type: integer, example: 127 }
+
+    Error:
+      type: object
+      required: [timestamp, status, code, message]
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+        status:
+          type: integer
+          example: 400
+        code:
+          type: string
+          example: "VALIDATION_ERROR"
+        message:
+          type: string
+          example: "appointment_date no cumple formato YYYY-MM-DD"
+        path:
+          type: string
+          example: "/v1/pre-registros"
+
+  responses:
+    BadRequest:
+      description: Parámetros inválidos o JSON mal formado.
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Error" }
+    Unauthorized:
+      description: Token ausente o inválido.
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Error" }
+    NotFound:
+      description: Recurso no encontrado.
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Error" }
+    ServerError:
+      description: Error interno no controlado.
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Error" }

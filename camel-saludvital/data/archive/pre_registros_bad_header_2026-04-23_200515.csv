@@ -1,0 +1,3 @@
+Archivo: pre_registros_bad_header.csv
+Motivo : Encabezado invalido. Esperado: [patient_id, full_name, appointment_date, insurance_code] | Recibido: [id_patient, name, date, insurance]
+Fecha  : 2026-04-23 20:05:15

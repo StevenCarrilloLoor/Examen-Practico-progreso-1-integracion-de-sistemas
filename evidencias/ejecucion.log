@@ -1,0 +1,38 @@
+2026-04-23 19:42:54,290 [INFO] ====================================================================
+2026-04-23 19:42:54,290 [INFO]  SIMULACION CAMEL - Clinica SaludVital - 2026-04-23 19:42:54
+2026-04-23 19:42:54,290 [INFO] ====================================================================
+2026-04-23 19:42:54,290 [INFO] [INGESTA] Archivo detectado: 'pre_registros_bad_header.csv' tamanio=65 bytes
+2026-04-23 19:42:54,291 [WARNING] [VALIDACION FAIL] archivo='pre_registros_bad_header.csv' motivo='Encabezado invalido. Esperado: ['patient_id', 'full_name', 'appointment_date', 'insurance_code'] | Recibido: ['id_patient', 'name', 'date', 'insurance']'
+2026-04-23 19:42:54,292 [WARNING] [ERROR] Movido a carpeta error + reporte generado
+2026-04-23 19:42:54,292 [INFO] [ARCHIVE] Archivado como 'pre_registros_bad_header_2026-04-23_194254.csv'
+2026-04-23 19:42:54,293 [INFO] [FIN] Procesamiento completo de 'pre_registros_bad_header.csv' (original movido a input/.processing/ -> no se reprocesa)
+2026-04-23 19:42:54,293 [INFO] [INGESTA] Archivo detectado: 'pre_registros_invalidos.csv' tamanio=142 bytes
+2026-04-23 19:42:54,329 [WARNING] [VALIDACION FAIL] archivo='pre_registros_invalidos.csv' motivo='Fila 2: appointment_date '10/05/2026' no cumple formato YYYY-MM-DD.'
+2026-04-23 19:42:54,330 [WARNING] [ERROR] Movido a carpeta error + reporte generado
+2026-04-23 19:42:54,331 [INFO] [ARCHIVE] Archivado como 'pre_registros_invalidos_2026-04-23_194254.csv'
+2026-04-23 19:42:54,332 [INFO] [FIN] Procesamiento completo de 'pre_registros_invalidos.csv' (original movido a input/.processing/ -> no se reprocesa)
+2026-04-23 19:42:54,332 [INFO] [INGESTA] Archivo detectado: 'pre_registros_mixtos.csv' tamanio=145 bytes
+2026-04-23 19:42:54,332 [WARNING] [VALIDACION FAIL] archivo='pre_registros_mixtos.csv' motivo='Fila 3: campo vacio en columna 'full_name'.'
+2026-04-23 19:42:54,333 [WARNING] [ERROR] Movido a carpeta error + reporte generado
+2026-04-23 19:42:54,333 [INFO] [ARCHIVE] Archivado como 'pre_registros_mixtos_2026-04-23_194254.csv'
+2026-04-23 19:42:54,334 [INFO] [FIN] Procesamiento completo de 'pre_registros_mixtos.csv' (original movido a input/.processing/ -> no se reprocesa)
+2026-04-23 19:42:54,334 [INFO] [INGESTA] Archivo detectado: 'pre_registros_validos.csv' tamanio=158 bytes
+2026-04-23 19:42:54,334 [INFO] [VALIDACION OK] archivo='pre_registros_validos.csv' filas_validas=3
+2026-04-23 19:42:54,335 [INFO] [OUTPUT] Entregando 'pre_registros_validos.csv' a Facturacion -> C:\Users\steve\Desktop\TRABAJOS GENERATIVOS\Examen Practico progreso 1 integracion de sistemas\data\output\pre_registros_validos.csv
+2026-04-23 19:42:54,336 [INFO] [ARCHIVE] Archivado como 'pre_registros_validos_2026-04-23_194254.csv'
+2026-04-23 19:42:54,336 [INFO] [FIN] Procesamiento completo de 'pre_registros_validos.csv' (original movido a input/.processing/ -> no se reprocesa)
+2026-04-23 19:42:54,336 [INFO] ====================================================================
+2026-04-23 19:42:54,336 [INFO]  RESUMEN DEL PROCESAMIENTO
+2026-04-23 19:42:54,336 [INFO] ====================================================================
+2026-04-23 19:42:54,336 [INFO]  INVALIDO | pre_registros_bad_header.csv     | filas=0 | archivado=pre_registros_bad_header_2026-04-23_194254.csv
+2026-04-23 19:42:54,337 [INFO]           motivo: Encabezado invalido. Esperado: ['patient_id', 'full_name', 'appointment_date', 'insurance_code'] | Recibido: ['id_patient', 'name', 'date', 'insurance']
+2026-04-23 19:42:54,337 [INFO]  INVALIDO | pre_registros_invalidos.csv      | filas=0 | archivado=pre_registros_invalidos_2026-04-23_194254.csv
+2026-04-23 19:42:54,337 [INFO]           motivo: Fila 2: appointment_date '10/05/2026' no cumple formato YYYY-MM-DD.
+2026-04-23 19:42:54,337 [INFO]  INVALIDO | pre_registros_mixtos.csv         | filas=0 | archivado=pre_registros_mixtos_2026-04-23_194254.csv
+2026-04-23 19:42:54,337 [INFO]           motivo: Fila 3: campo vacio en columna 'full_name'.
+2026-04-23 19:42:54,337 [INFO]  VALIDO   | pre_registros_validos.csv        | filas=3 | archivado=pre_registros_validos_2026-04-23_194254.csv
+2026-04-23 19:42:54,337 [INFO] 
+2026-04-23 19:42:54,337 [INFO] Contenido final data/output  : ['pre_registros_validos.csv']
+2026-04-23 19:42:54,337 [INFO] Contenido final data/archive : ['pre_registros_bad_header_2026-04-23_194254.csv', 'pre_registros_bad_header_2026-04-24_002602.csv', 'pre_registros_bad_header_2026-04-24_002710.csv', 'pre_registros_invalidos_2026-04-23_194254.csv', 'pre_registros_invalidos_2026-04-24_002710.csv', 'pre_registros_mixtos_2026-04-23_194254.csv', 'pre_registros_mixtos_2026-04-24_002710.csv', 'pre_registros_validos_2026-04-23_194254.csv', 'pre_registros_validos_2026-04-24_002710.csv']
+2026-04-23 19:42:54,337 [INFO] Contenido final data/error   : ['pre_registros_bad_header.csv', 'pre_registros_bad_header.csv.motivo.txt', 'pre_registros_invalidos.csv', 'pre_registros_invalidos.csv.motivo.txt', 'pre_registros_mixtos.csv', 'pre_registros_mixtos.csv.motivo.txt']
+2026-04-23 19:42:54,338 [INFO] Contenido final data/input   : []

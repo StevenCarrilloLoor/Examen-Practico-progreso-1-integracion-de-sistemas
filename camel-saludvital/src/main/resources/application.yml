@@ -1,0 +1,26 @@
+spring:
+  application:
+    name: camel-saludvital
+
+# Configuracion propia de la integracion File Transfer
+saludvital:
+  paths:
+    input:   "data/input"
+    output:  "data/output"
+    archive: "data/archive"
+    error:   "data/error"
+
+# Ajustes Camel
+camel:
+  springboot:
+    name: camel-saludvital
+    main-run-controller: true
+
+# Logging
+logging:
+  level:
+    root: INFO
+    com.saludvital: DEBUG
+    org.apache.camel: INFO
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"

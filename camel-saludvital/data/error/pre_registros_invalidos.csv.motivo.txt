@@ -1,0 +1,3 @@
+Archivo: pre_registros_invalidos.csv
+Motivo : Fila 2: appointment_date '10/05/2026' no cumple formato YYYY-MM-DD.
+Fecha  : 2026-04-23 20:05:16
